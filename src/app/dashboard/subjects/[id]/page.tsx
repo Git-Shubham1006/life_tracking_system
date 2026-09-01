@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma'
 
 import { Button } from '@/components/ui/button'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import { markAttendance, deleteSubject, deleteClassLog, markAttendanceWithDate } from '../actions'
 export default async function SubjectDetailPage({
   params,
@@ -39,6 +40,9 @@ export default async function SubjectDetailPage({
 
   return (
     <div className="min-h-screen p-8 max-w-2xl mx-auto">
+      <Link href={`/dashboard/subjects/${id}/revision`} className="text-sm text-blue-600 hover:underline mb-4 block">
+        Go to Revision & Chapters →
+      </Link>
       <div className="flex justify-between items-center mb-2">
         <h1 className="text-3xl font-bold">{subject.title}</h1>
         <form action={deleteSubject.bind(null, id)}>
