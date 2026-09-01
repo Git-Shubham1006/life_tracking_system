@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String     @id @default(cuid())
+  clerkId    String     @unique
+  email      String     @unique
+  name       String?
+  businesses Business[]
+  subjects   Subject[]
+}
+
+enum Status {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+  ON_HOLD
+  ARCHIVED
+}
+
+enum NodeType {
+  BRANCH
+  PRIORITY_ITEM
+  CHAPTER
+  REVISION_POINT
+  GENERAL
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+}
+
+model Business {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  status      Status   @default(IN_PROGRESS)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  nodes       Node[]
+
+  @@index([userId])
+  @@map("businesses")
+}
+
+model Subject {
+  id          String     @id @default(cuid())
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  status      Status     @default(IN_PROGRESS)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  nodes       Node[]
+  classLogs   ClassLog[]
+
+  @@index([userId])
+  @@map("subjects")
+}
+
+model Node {
+  id         String    @id @default(cuid())
+  businessId String?
+  business   Business? @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  subjectId  String?
+  subject    Subject?  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  parentId   String?
+  parent     Node?     @relation("NodeChildren", fields: [parentId], references: [id], onDelete: Cascade)
+  children   Node[]    @relation("NodeChildren")
+  type       NodeType  @default(GENERAL)
+  title      String
+  content    String?
+  order      Int       @default(0)
+  isKeyPoint Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([businessId])
+  @@index([subjectId])
+  @@index([parentId])
+  @@map("nodes")
+}
+
+model ClassLog {
+  id        String            @id @default(cuid())
+  subjectId String
+  subject   Subject           @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  date      DateTime          @default(now())
+  status    AttendanceStatus
+  createdAt DateTime          @default(now())
+
+  @@index([subjectId])
+  @@map("class_logs")
+}
