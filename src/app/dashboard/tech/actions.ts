@@ -35,3 +35,13 @@ export async function toggleTechStatus(id: string, currentStatus: string) {
   })
   revalidatePath('/dashboard/tech')
 }
+
+export async function updateTechProject(id: string, formData: FormData) {
+  const title = formData.get('title') as string
+  const description = formData.get('description') as string
+  await prisma.techProject.update({
+    where: { id },
+    data: { title, description },
+  })
+  revalidatePath('/dashboard/tech')
+}

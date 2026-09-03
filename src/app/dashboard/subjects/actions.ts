@@ -100,3 +100,13 @@ export async function toggleNodeCompletion(nodeId: string, subjectId: string, cu
   })
   revalidatePath(`/dashboard/subjects/${subjectId}/revision`)
 }
+
+export async function updateSubject(subjectId: string, formData: FormData) {
+  const title = formData.get('title') as string
+  await prisma.subject.update({
+    where: { id: subjectId },
+    data: { title },
+  })
+  revalidatePath('/dashboard/subjects')
+  revalidatePath(`/dashboard/subjects/${subjectId}`)
+}

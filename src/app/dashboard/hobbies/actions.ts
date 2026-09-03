@@ -26,3 +26,13 @@ export async function deleteHobby(id: string) {
   await prisma.hobby.delete({ where: { id } })
   revalidatePath('/dashboard/hobbies')
 }
+
+export async function updateHobby(id: string, formData: FormData) {
+  const title = formData.get('title') as string
+  const description = formData.get('description') as string
+  await prisma.hobby.update({
+    where: { id },
+    data: { title, description },
+  })
+  revalidatePath('/dashboard/hobbies')
+}

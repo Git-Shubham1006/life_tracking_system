@@ -60,3 +60,13 @@ export async function toggleBusinessNodeCompleted(nodeId: string, businessId: st
   })
   revalidatePath(`/dashboard/business/${businessId}`)
 }
+
+export async function updateBusiness(businessId: string, formData: FormData) {
+  const title = formData.get('title') as string
+  await prisma.business.update({
+    where: { id: businessId },
+    data: { title },
+  })
+  revalidatePath('/dashboard/business')
+  revalidatePath(`/dashboard/business/${businessId}`)
+}
