@@ -12,8 +12,10 @@ model User {
   clerkId    String     @unique
   email      String     @unique
   name       String?
-  businesses Business[]
-  subjects   Subject[]
+  businesses   Business[]
+  subjects     Subject[]
+  techProjects TechProject[]
+  hobbies      Hobby[]
 }
 
 enum Status {
@@ -102,4 +104,33 @@ model ClassLog {
 
   @@index([subjectId])
   @@map("class_logs")
+}
+
+model TechProject {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  status      Status   @default(IN_PROGRESS)
+  repoUrl     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@map("tech_projects")
+}
+
+model Hobby {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  status      Status   @default(IN_PROGRESS)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@map("hobbies")
 }
