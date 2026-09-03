@@ -1,35 +1,17 @@
 import { UserButton } from '@clerk/nextjs'
-import Link from 'next/link'
-
-const navItems = [
-  { name: 'Overview', href: '/dashboard', color: 'text-gray-700' },
-  { name: 'Business', href: '/dashboard/business', color: 'text-blue-700' },
-  { name: 'Subjects', href: '/dashboard/subjects', color: 'text-violet-700' },
-  { name: 'Tech', href: '/dashboard/tech', color: 'text-emerald-700' },
-  { name: 'Hobbies', href: '/dashboard/hobbies', color: 'text-amber-700' },
-]
+import { DashboardNav } from '@/components/DashboardNav'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex">
-      <aside className="w-56 border-r bg-gray-50 p-4 flex flex-col">
-        <h2 className="text-lg font-bold mb-6 px-2">Life Tracker</h2>
-        <nav className="flex flex-col gap-1">
-          {navItems.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={`px-3 py-2 rounded-md text-sm font-medium hover:bg-white hover:shadow-sm transition ${item.color}`}
-            >
-              {item.name}
-            </Link>
-          ))}
-        </nav>
-        <div className="mt-auto pt-4 border-t flex justify-center">
-          <UserButton />
+    <div className="min-h-screen">
+      <header className="flex items-center justify-between px-4 py-3 border-b bg-white sticky top-0 z-10">
+        <div className="flex items-center gap-2">
+          <DashboardNav />
+          <span className="font-semibold text-gray-800">Life Tracker</span>
         </div>
-      </aside>
-      <main className="flex-1 overflow-y-auto">{children}</main>
+        <UserButton />
+      </header>
+      <main>{children}</main>
     </div>
   )
 }
