@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { getOrCreateUser } from '@/lib/getOrCreateUser'
-import { createBusiness } from './actions'
+import { createBusiness, updateBusiness } from './actions'
+import { EditButton } from '@/components/EditButton'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -36,13 +37,17 @@ export default async function BusinessPage() {
           <p className="text-gray-500">No businesses yet. Add one above.</p>
         )}
         {businesses.map((business) => (
-          <Link key={business.id} href={`/dashboard/business/${business.id}`}>
-            <Card className="hover:bg-blue-50 border-blue-100 cursor-pointer transition">
-              <CardHeader>
-                <CardTitle>{business.title}</CardTitle>
-              </CardHeader>
-            </Card>
-          </Link>
+          <Card key={business.id} className="hover:bg-blue-50 border-blue-100 transition">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <Link href={`/dashboard/business/${business.id}`} className="flex-1">
+                <CardTitle className="cursor-pointer">{business.title}</CardTitle>
+              </Link>
+              <EditButton
+                action={updateBusiness.bind(null, business.id)}
+                initialTitle={business.title}
+              />
+            </CardHeader>
+          </Card>
         ))}
       </div>
     </div>

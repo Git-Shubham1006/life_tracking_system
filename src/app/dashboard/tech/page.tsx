@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { getOrCreateUser } from '@/lib/getOrCreateUser'
-import { createTechProject, deleteTechProject, toggleTechStatus } from './actions'
+import { createTechProject, deleteTechProject, toggleTechStatus, updateTechProject } from './actions'
+import { EditButton } from '@/components/EditButton'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -50,6 +51,12 @@ export default async function TechPage() {
                 )}
               </div>
               <div className="flex gap-2">
+                <EditButton
+                  action={updateTechProject.bind(null, project.id)}
+                  initialTitle={project.title}
+                  initialDescription={project.description ?? ''}
+                  hasDescription
+                />
                 <form action={toggleTechStatus.bind(null, project.id, project.status)}>
                   <Button type="submit" variant="outline" size="sm">
                     {project.status === 'COMPLETED' ? '↺ Reopen' : '✓ Complete'}
