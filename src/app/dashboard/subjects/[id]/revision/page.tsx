@@ -1,19 +1,21 @@
 import { prisma } from '@/lib/prisma'
-import { createNode, deleteNode, toggleKeyPoint } from '../../actions'
+import { createNode, deleteNode, toggleKeyPoint, toggleNodeCompletion } from '../../actions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { CheckCircle2, Circle } from 'lucide-react'
 
 type NodeWithChildren = {
   id: string
   title: string
   isKeyPoint: boolean
+  isCompleted: boolean
   children: NodeWithChildren[]
 }
 
 function buildTree(
-  nodes: { id: string; title: string; isKeyPoint: boolean; parentId: string | null }[]
+  nodes: { id: string; title: string; isKeyPoint: boolean; isCompleted: boolean; parentId: string | null }[]
 ): NodeWithChildren[] {
   const map = new Map<string, NodeWithChildren>()
   nodes.forEach((n) => map.set(n.id, { ...n, children: [] }))
@@ -33,13 +35,20 @@ function buildTree(
 function NodeItem({ node, subjectId }: { node: NodeWithChildren; subjectId: string }) {
   return (
     <div className="ml-4 mt-2">
-      <div className="flex items-center gap-2 p-2 border rounded-lg bg-white">
+      <div className={`flex items-center gap-2 p-2 border rounded-lg ${node.isCompleted ? 'bg-green-50/50' : 'bg-white'}`}>
+        <form action={toggleNodeCompletion.bind(null, node.id, subjectId, node.isCompleted)}>
+          <button type="submit" title="Toggle completion" className={`flex items-center justify-center w-6 h-6 rounded-full hover:bg-gray-100 ${node.isCompleted ? 'text-green-600' : 'text-gray-300'}`}>
+            {node.isCompleted ? <CheckCircle2 size={20} /> : <Circle size={20} />}
+          </button>
+        </form>
         <form action={toggleKeyPoint.bind(null, node.id, subjectId, node.isKeyPoint)}>
-          <button type="submit" title="Mark as key revision point">
+          <button type="submit" title="Mark as key revision point" className="hover:scale-110 transition-transform">
             {node.isKeyPoint ? '⭐' : '☆'}
           </button>
         </form>
-        <span className={node.isKeyPoint ? 'font-semibold text-amber-700' : ''}>{node.title}</span>
+        <span className={`flex-1 ${node.isKeyPoint ? 'font-semibold text-amber-700' : ''} ${node.isCompleted ? 'line-through text-gray-400' : ''}`}>
+          {node.title}
+        </span>
         <form action={deleteNode.bind(null, node.id, subjectId)} className="ml-auto">
           <Button type="submit" variant="ghost" size="sm" className="text-gray-400 hover:text-red-600">
             ✕

@@ -92,3 +92,11 @@ export async function toggleKeyPoint(nodeId: string, subjectId: string, current:
   })
   revalidatePath(`/dashboard/subjects/${subjectId}/revision`)
 }
+
+export async function toggleNodeCompletion(nodeId: string, subjectId: string, current: boolean) {
+  await prisma.node.update({
+    where: { id: nodeId },
+    data: { isCompleted: !current },
+  })
+  revalidatePath(`/dashboard/subjects/${subjectId}/revision`)
+}
