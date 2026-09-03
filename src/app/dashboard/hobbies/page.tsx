@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma'
 import { getOrCreateUser } from '@/lib/getOrCreateUser'
 import { createHobby, deleteHobby, updateHobby } from './actions'
 import { EditButton } from '@/components/EditButton'
+import { DeleteButton } from '@/components/DeleteButton'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -46,11 +47,10 @@ export default async function HobbiesPage() {
                   initialDescription={hobby.description ?? ''}
                   hasDescription
                 />
-                <form action={deleteHobby.bind(null, hobby.id)}>
-                  <Button type="submit" variant="ghost" size="sm" className="text-gray-400 hover:text-red-600">
-                    ✕
-                  </Button>
-                </form>
+                <DeleteButton
+                  action={deleteHobby.bind(null, hobby.id)}
+                  itemName={hobby.title}
+                />
               </div>
             </CardHeader>
           </Card>

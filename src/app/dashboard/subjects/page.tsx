@@ -1,8 +1,9 @@
 import { prisma } from '@/lib/prisma'
 
 import { getOrCreateUser } from '@/lib/getOrCreateUser'
-import { createSubject, updateSubject } from './actions'
+import { createSubject, updateSubject, deleteSubject } from './actions'
 import { EditButton } from '@/components/EditButton'
+import { DeleteButton } from '@/components/DeleteButton'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -47,6 +48,10 @@ export default async function SubjectsPage() {
                 <EditButton
                   action={updateSubject.bind(null, subject.id)}
                   initialTitle={subject.title}
+                />
+                <DeleteButton
+                  action={deleteSubject.bind(null, subject.id)}
+                  itemName={subject.title}
                 />
               </div>
             </CardHeader>

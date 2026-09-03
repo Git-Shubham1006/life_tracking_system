@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma'
 import { getOrCreateUser } from '@/lib/getOrCreateUser'
 import { createTechProject, deleteTechProject, toggleTechStatus, updateTechProject } from './actions'
 import { EditButton } from '@/components/EditButton'
+import { DeleteButton } from '@/components/DeleteButton'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -62,11 +63,10 @@ export default async function TechPage() {
                     {project.status === 'COMPLETED' ? '↺ Reopen' : '✓ Complete'}
                   </Button>
                 </form>
-                <form action={deleteTechProject.bind(null, project.id)}>
-                  <Button type="submit" variant="ghost" size="sm" className="text-gray-400 hover:text-red-600">
-                    ✕
-                  </Button>
-                </form>
+                <DeleteButton
+                  action={deleteTechProject.bind(null, project.id)}
+                  itemName={project.title}
+                />
               </div>
             </CardHeader>
           </Card>

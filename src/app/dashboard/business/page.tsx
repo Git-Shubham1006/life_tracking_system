@@ -1,7 +1,8 @@
 import { prisma } from '@/lib/prisma'
 import { getOrCreateUser } from '@/lib/getOrCreateUser'
-import { createBusiness, updateBusiness } from './actions'
+import { createBusiness, updateBusiness, deleteBusiness } from './actions'
 import { EditButton } from '@/components/EditButton'
+import { DeleteButton } from '@/components/DeleteButton'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -42,10 +43,16 @@ export default async function BusinessPage() {
               <Link href={`/dashboard/business/${business.id}`} className="flex-1">
                 <CardTitle className="cursor-pointer">{business.title}</CardTitle>
               </Link>
-              <EditButton
-                action={updateBusiness.bind(null, business.id)}
-                initialTitle={business.title}
-              />
+              <div className="flex items-center gap-1">
+                <EditButton
+                  action={updateBusiness.bind(null, business.id)}
+                  initialTitle={business.title}
+                />
+                <DeleteButton
+                  action={deleteBusiness.bind(null, business.id)}
+                  itemName={business.title}
+                />
+              </div>
             </CardHeader>
           </Card>
         ))}
