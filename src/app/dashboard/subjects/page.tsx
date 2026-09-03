@@ -1,7 +1,8 @@
 import { prisma } from '@/lib/prisma'
 
 import { getOrCreateUser } from '@/lib/getOrCreateUser'
-import { createSubject } from './actions'
+import { createSubject, updateSubject } from './actions'
+import { EditButton } from '@/components/EditButton'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -37,13 +38,19 @@ export default async function SubjectsPage() {
           <p className="text-gray-500">No subjects yet. Add one above.</p>
         )}
         {subjects.map((subject) => (
-          <Link key={subject.id} href={`/dashboard/subjects/${subject.id}`}>
-            <Card className="hover:bg-gray-50 cursor-pointer transition">
-              <CardHeader>
-                <CardTitle>{subject.title}</CardTitle>
-              </CardHeader>
-            </Card>
-          </Link>
+          <Card key={subject.id} className="hover:bg-gray-50 transition">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <Link href={`/dashboard/subjects/${subject.id}`} className="flex-1">
+                <CardTitle className="cursor-pointer">{subject.title}</CardTitle>
+              </Link>
+              <div className="flex items-center gap-1">
+                <EditButton
+                  action={updateSubject.bind(null, subject.id)}
+                  initialTitle={subject.title}
+                />
+              </div>
+            </CardHeader>
+          </Card>
         ))}
       </div>
     </div>
