@@ -16,6 +16,7 @@ model User {
   subjects     Subject[]
   techProjects TechProject[]
   hobbies      Hobby[]
+  students     Student[]
 }
 
 enum Status {
@@ -133,4 +134,38 @@ model Hobby {
 
   @@index([userId])
   @@map("hobbies")
+}
+
+enum StudentAttendanceStatus {
+  PRESENT
+  ABSENT
+  MISSED
+}
+
+model Student {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  schedule    String?  // Text area for class schedule
+  attachments String?  // Text area for student specifications/notes
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  attendances StudentAttendance[]
+
+  @@index([userId])
+  @@map("students")
+}
+
+model StudentAttendance {
+  id        String   @id @default(cuid())
+  studentId String
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  date      DateTime
+  status    StudentAttendanceStatus
+  createdAt DateTime @default(now())
+
+  @@unique([studentId, date])
+  @@index([studentId])
+  @@map("student_attendances")
 }

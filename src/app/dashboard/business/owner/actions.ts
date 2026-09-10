@@ -18,15 +18,15 @@ export async function createBusiness(formData: FormData) {
     },
   })
 
-  revalidatePath('/dashboard/business')
+  revalidatePath('/dashboard/business/owner')
 }
 
 export async function deleteBusiness(businessId: string) {
   await prisma.business.delete({
     where: { id: businessId },
   })
-  revalidatePath('/dashboard/business')
-  redirect('/dashboard/business')
+  revalidatePath('/dashboard/business/owner')
+  redirect('/dashboard/business/owner')
 }
 
 export async function createBusinessNode(formData: FormData) {
