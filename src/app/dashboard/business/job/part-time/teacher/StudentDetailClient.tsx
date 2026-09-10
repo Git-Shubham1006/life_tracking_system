@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { StudentAttendanceStatus } from "@prisma/client";
-import { toggleAttendance, updateStudentDetails } from "../actions";
+import { toggleAttendance, updateStudentDetails } from "./actions";
 
 interface StudentProps {
   id: string;
