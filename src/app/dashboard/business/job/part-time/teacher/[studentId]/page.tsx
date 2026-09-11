@@ -9,14 +9,16 @@ import { StudentDetailClient } from '../StudentDetailClient'
 export default async function StudentDetailPage({
   params,
 }: {
-  params: { studentId: string }
+  params: Promise<{ studentId: string }>
 }) {
   const user = await getOrCreateUser()
   if (!user) return notFound()
 
+  const { studentId } = await params
+
   const student = await prisma.student.findUnique({
     where: { 
-      id: params.studentId,
+      id: studentId,
       userId: user.id 
     },
     include: {
