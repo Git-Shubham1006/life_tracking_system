@@ -128,7 +128,7 @@ export function StudentDetailClient({ student }: { student: StudentProps }) {
             <div
               key={day}
               onClick={() => handleStatusCycle(day)}
-              className={`aspect-square flex items-center justify-center rounded-md cursor-pointer transition-colors ${bgColor}`}
+              className={`aspect-square flex items-center justify-center rounded-md cursor-pointer transition-all active:scale-95 touch-manipulation text-sm md:text-base select-none ${bgColor}`}
             >
               {day}
             </div>
