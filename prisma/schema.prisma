@@ -140,6 +140,8 @@ enum StudentAttendanceStatus {
   PRESENT
   ABSENT
   MISSED
+  RESCHEDULED
+  HOLIDAY
 }
 
 model Student {
