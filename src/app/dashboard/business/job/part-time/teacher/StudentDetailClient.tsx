@@ -123,10 +123,10 @@ export function StudentDetailClient({ student }: { student: StudentProps }) {
       clickTimeoutRef.current = setTimeout(() => {
         // Single click confirmed
         const current = getAttendanceForDay(day);
-        if (current?.status === StudentAttendanceStatus.PRESENT) {
-          updateStatus(day, null); // toggle off
+        if (current?.status) {
+          updateStatus(day, null); // Clear ANY existing mark
         } else {
-          updateStatus(day, StudentAttendanceStatus.PRESENT);
+          updateStatus(day, StudentAttendanceStatus.PRESENT); // Mark Present if empty
         }
         clickTimeoutRef.current = null;
       }, 250);
