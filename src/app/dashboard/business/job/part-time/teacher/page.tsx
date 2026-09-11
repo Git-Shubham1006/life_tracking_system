@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowLeft, User } from 'lucide-react'
-import { createStudent } from './actions'
+import { createStudent, deleteStudent } from './actions'
+import { DeleteButton } from '@/components/DeleteButton'
 
 export default async function TeacherStudentsPage() {
   const user = await getOrCreateUser()
@@ -53,6 +54,10 @@ export default async function TeacherStudentsPage() {
                 </div>
                 <CardTitle className="cursor-pointer text-lg">{student.name}</CardTitle>
               </Link>
+              <DeleteButton
+                action={deleteStudent.bind(null, student.id)}
+                itemName={student.name}
+              />
             </CardHeader>
           </Card>
         ))}

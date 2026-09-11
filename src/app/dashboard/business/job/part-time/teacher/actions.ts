@@ -22,6 +22,21 @@ export async function createStudent(formData: FormData) {
   revalidatePath('/dashboard/business/job/part-time/teacher')
 }
 
+export async function deleteStudent(studentId: string) {
+  const user = await getOrCreateUser()
+  if (!user) throw new Error('Not authenticated')
+
+  await prisma.student.delete({
+    where: {
+      id: studentId,
+      userId: user.id
+    }
+  })
+
+  revalidatePath('/dashboard/business/job/part-time/teacher')
+  redirect('/dashboard/business/job/part-time/teacher')
+}
+
 export async function updateStudentDetails(studentId: string, formData: FormData) {
   const schedule = formData.get('schedule') as string
   const attachments = formData.get('attachments') as string

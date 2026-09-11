@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useTransition } from "react";
-import { MoreVertical, Calendar as CalendarIcon, FileText, Clock } from "lucide-react";
+import { MoreVertical, Calendar as CalendarIcon, FileText, Clock, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { StudentAttendanceStatus } from "@prisma/client";
-import { toggleAttendance, updateStudentDetails } from "./actions";
+import { toggleAttendance, updateStudentDetails, deleteStudent } from "./actions";
 
 interface StudentProps {
   id: string;
@@ -175,6 +175,18 @@ export function StudentDetailClient({ student }: { student: StudentProps }) {
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => setActiveSheet("attachments")} className="cursor-pointer gap-2">
               <FileText className="w-4 h-4" /> Attachments
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={() => {
+                if (confirm('Are you sure you want to delete this student?')) {
+                  startTransition(() => {
+                    deleteStudent(student.id)
+                  })
+                }
+              }} 
+              className="cursor-pointer gap-2 text-red-600 focus:bg-red-50 focus:text-red-600 dark:focus:bg-red-950"
+            >
+              <Trash className="w-4 h-4" /> Delete Student
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
