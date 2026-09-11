@@ -12,22 +12,22 @@ export default function BusinessHubPage() {
         Select whether you want to manage your Job (Part-Time/Full-Time) or your own Business ventures.
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-        <Link href="/dashboard/business/job" className="group">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
+        <Link href="/dashboard/business/job" className="group block w-full">
           <Card className="h-64 flex flex-col items-center justify-center hover:bg-beige-100/50 dark:hover:bg-brown-800/50 hover:border-teal-500 transition-all cursor-pointer">
             <CardHeader className="text-center flex flex-col items-center">
               <div className="w-16 h-16 rounded-full bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                 <Briefcase className="w-8 h-8 text-teal-600 dark:text-teal-300" />
               </div>
               <CardTitle className="text-2xl mb-2">Job</CardTitle>
-              <CardDescription>
+              <CardDescription className="text-base">
                 Manage your part-time or full-time jobs, teaching schedules, and students.
               </CardDescription>
             </CardHeader>
           </Card>
         </Link>
 
-        <Link href="/dashboard/business/owner" className="group">
+        <Link href="/dashboard/business/owner" className="group block w-full">
           <Card className="h-64 flex flex-col items-center justify-center hover:bg-beige-100/50 dark:hover:bg-brown-800/50 hover:border-teal-500 transition-all cursor-pointer">
             <CardHeader className="text-center flex flex-col items-center">
               <div className="w-16 h-16 rounded-full bg-brown-100 dark:bg-brown-900/50 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">

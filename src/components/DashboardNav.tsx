@@ -10,7 +10,6 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet'
 import { useState } from 'react'
-import { ThemeToggle } from './ThemeToggle'
 
 const navItems = [
   { name: 'Overview', href: '/dashboard', color: 'text-gray-700' },
@@ -43,9 +42,6 @@ export function DashboardNav() {
               {item.name}
             </Link>
           ))}
-          <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800">
-            <ThemeToggle />
-          </div>
         </nav>
       </SheetContent>
     </Sheet>
