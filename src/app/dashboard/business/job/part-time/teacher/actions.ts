@@ -52,8 +52,10 @@ export async function updateStudentDetails(studentId: string, formData: FormData
   revalidatePath(`/dashboard/business/job/part-time/teacher/${studentId}`)
 }
 
-export async function toggleAttendance(studentId: string, dateIso: string, status: StudentAttendanceStatus | null) {
-  const date = new Date(dateIso)
+export async function toggleAttendance(studentId: string, year: number, month: number, day: number, status: StudentAttendanceStatus | null) {
+  // Construct absolute UTC date to prevent ANY timezone shifting
+  const startOfDay = new Date(Date.UTC(year, month, day, 0, 0, 0, 0))
+  const endOfDay = new Date(Date.UTC(year, month, day, 23, 59, 59, 999))
   
   if (!status) {
     // Delete attendance if null
@@ -61,23 +63,19 @@ export async function toggleAttendance(studentId: string, dateIso: string, statu
       where: {
         studentId,
         date: {
-          gte: new Date(date.setHours(0, 0, 0, 0)),
-          lt: new Date(date.setHours(23, 59, 59, 999)),
+          gte: startOfDay,
+          lt: endOfDay,
         }
       }
     })
   } else {
-    // Upsert attendance
-    const startOfDay = new Date(date)
-    startOfDay.setHours(0, 0, 0, 0)
-    
     // We try to find existing for this day
     const existing = await prisma.studentAttendance.findFirst({
       where: {
         studentId,
         date: {
           gte: startOfDay,
-          lt: new Date(new Date(startOfDay).setDate(startOfDay.getDate() + 1))
+          lt: endOfDay
         }
       }
     })

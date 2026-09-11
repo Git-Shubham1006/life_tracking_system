@@ -60,31 +60,36 @@ export function StudentDetailClient({ student }: { student: StudentProps }) {
   const today = new Date();
 
   const getAttendanceForDay = (day: number) => {
-    const target = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-    target.setHours(0, 0, 0, 0);
     return attendances.find((a) => {
       const d = new Date(a.date);
-      d.setHours(0, 0, 0, 0);
-      return d.getTime() === target.getTime();
+      // Compare strict UTC fields since the backend saves exactly at 00:00:00 UTC
+      return d.getUTCFullYear() === currentDate.getFullYear() && 
+             d.getUTCMonth() === currentDate.getMonth() && 
+             d.getUTCDate() === day;
     });
   };
 
   const updateStatus = (day: number, status: StudentAttendanceStatus | null) => {
-    const targetDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-    targetDate.setHours(0, 0, 0, 0);
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
 
     // Optimistic update
     setAttendances((prev) => {
-      const filtered = prev.filter(a => new Date(a.date).getTime() !== targetDate.getTime());
+      // Filter out existing attendance for this UTC day
+      const filtered = prev.filter(a => {
+        const d = new Date(a.date);
+        return !(d.getUTCFullYear() === year && d.getUTCMonth() === month && d.getUTCDate() === day);
+      });
       if (status) {
-        filtered.push({ date: targetDate, status });
+        // Optimistically insert a UTC date matching the logical day
+        filtered.push({ date: new Date(Date.UTC(year, month, day, 0, 0, 0, 0)), status });
       }
       return filtered;
     });
 
     // Server update
     startTransition(() => {
-      toggleAttendance(student.id, targetDate.toISOString(), status);
+      toggleAttendance(student.id, year, month, day, status);
     });
     
     setLongPressMenuDay(null);
@@ -227,6 +232,10 @@ export function StudentDetailClient({ student }: { student: StudentProps }) {
           const att = getAttendanceForDay(day);
           const future = isFuture(day);
           const display = getStatusDisplay(att?.status);
+          const isToday = 
+            currentDate.getFullYear() === today.getFullYear() &&
+            currentDate.getMonth() === today.getMonth() &&
+            day === today.getDate();
           
           return (
             <div key={day} className="relative aspect-square">
@@ -237,7 +246,9 @@ export function StudentDetailClient({ student }: { student: StudentProps }) {
                 onPointerLeave={handlePointerCancel}
                 className={`w-full h-full flex flex-col items-center justify-center rounded-md transition-all touch-manipulation
                   ${future ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer active:scale-90 hover:bg-muted'}
-                  ${display.bg} ${display.text} border border-transparent ${att?.status ? 'border-border shadow-sm' : ''}
+                  ${display.bg} ${display.text} border 
+                  ${att?.status ? 'border-border shadow-sm' : 'border-transparent'}
+                  ${isToday ? 'ring-2 ring-primary ring-offset-1 dark:ring-offset-background' : ''}
                 `}
                 style={{ WebkitTapHighlightColor: 'transparent' }}
               >
